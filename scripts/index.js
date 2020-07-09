@@ -10,7 +10,7 @@ const description = popup.querySelector('.popup__text_type_description');
 const popupForm = popup.querySelector('.popup__form');
 
 function toggle() {
-    popup.classList.toggle('popup__open');
+    popup.classList.toggle('popup_open');
 }
 
 function openPopUp() {
