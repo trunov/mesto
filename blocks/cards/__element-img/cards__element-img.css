@@ -1,5 +1,5 @@
 .cards__element-img {
-    width: 282px;
+    width: 100%;
     height: 282px;
     object-fit: cover;
 }

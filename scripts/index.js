@@ -5,8 +5,8 @@ const profileDescription = profile.querySelector('.profile__description');
 
 const popup = document.querySelector('.popup');
 const closeButton = popup.querySelector('.popup__close-button');
-const text = popup.querySelector('.popup__text_name');
-const description = popup.querySelector('.popup__text_description');
+const text = popup.querySelector('.popup__text_type_name');
+const description = popup.querySelector('.popup__text_type_description');
 const popupForm = popup.querySelector('.popup__form');
 
 function toggle() {

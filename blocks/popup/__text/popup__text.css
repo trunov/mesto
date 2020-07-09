@@ -8,6 +8,7 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
+    margin-bottom: 30px;
 }
 
 .popup__text::placeholder {
