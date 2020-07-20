@@ -29,53 +29,6 @@
 
       <section class="cards">
         <ul class="cards__container">
-          <li class="cards__element">
-            <img class="cards__element-img" src="images/cards-element-moscow.jpeg" alt="Вид на Кремль" />
-            <div class="cards__description">
-              <h2 class="cards__element-title">Москва</h2>
-              <button class="cards__element-button" type="button" title="Нравится"></button>
-            </div>
-          </li>
-
-          <li class="cards__element">
-            <img class="cards__element-img" src="images/cards-element-rostov.jpg" alt="Ростов" />
-            <div class="cards__description">
-              <h2 class="cards__element-title">Ростов</h2>
-              <button class="cards__element-button" type="button" title="Нравится"></button>
-            </div>
-          </li>
-
-          <li class="cards__element">
-            <img class="cards__element-img" src="images/cards-element-tver.jpg" alt="Тверские улицы" />
-            <div class="cards__description">
-              <h2 class="cards__element-title">Тверь</h2>
-              <button class="cards__element-button" type="button" title="Нравится"></button>
-            </div>
-          </li>
-
-          <li class="cards__element">
-            <img class="cards__element-img" src="images/cards-element-shelkovo.jpg" alt="Набережная города Щелково" />
-            <div class="cards__description">
-              <h2 class="cards__element-title">Щелково</h2>
-              <button class="cards__element-button" type="button" title="Нравится"></button>
-            </div>
-          </li>
-
-          <li class="cards__element">
-            <img class="cards__element-img" src="images/cards-element-nov.jpg" alt="Нижний Новгород" />
-            <div class="cards__description">
-              <h2 class="cards__element-title">Новгород</h2>
-              <button class="cards__element-button" type="button" title="Нравится"></button>
-            </div>
-          </li>
-
-          <li class="cards__element">
-            <img class="cards__element-img" src="images/cards-element-petersburg.jpg" alt="Санкт-Петербург" />
-            <div class="cards__description">
-              <h2 class="cards__element-title">Петербург</h2>
-              <button class="cards__element-button" type="button" title="Нравится"></button>
-            </div>
-          </li>
         </ul>
       </section>
     </main>
@@ -84,7 +37,7 @@
       <p class="footer__copyright">&copy; 2020. Трунов Кирилл</p>
     </footer>
 
-    <div class="popup">
+    <div class="popup popup-edit">
       <div class="popup__container">
         <button aria-label="кнопка закрыть" type="button" class="popup__close-button"></button>
         <h2 class="popup__title">Редактировать профиль</h2>
@@ -97,6 +50,30 @@
         </form>
       </div>
     </div>
+
+    <div class="popup popup-image">
+      <div class="popup__container">
+        <button aria-label="кнопка закрыть" type="button" class="popup__close-button"></button>
+        <h2 class="popup__title">Новое место</h2>
+        <form action="#" name="popup-form" class="popup__form">
+          <fieldset class="popup__input-container">
+            <input required name="popup-name" type="text" value="" placeholder="Название" class="popup__text popup__text_type_title" />
+            <input required name="popup-description" type="text" value="" placeholder="Ссылка на картинку" class="popup__text popup__text_type_link" />
+            <button type="submit" class="popup__submit-button">Создать</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+
+    <template id="card-template">
+      <li class="cards__element">
+        <img class="cards__element-img" src="" alt="" />
+        <div class="cards__description">
+          <h2 class="cards__element-title"></h2>
+          <button class="cards__element-button" type="button" title="Нравится"></button>
+        </div>
+      </li>
+    </template>
 
     <script src="scripts/index.js"></script>
   </body>
