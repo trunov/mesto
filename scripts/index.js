@@ -48,6 +48,8 @@ const title = popupImage.querySelector('.popup__text_type_title');
 const cardTemplate = document.querySelector('#card-template').content;
 const cardContainer = document.querySelector('.cards__container');
 
+
+
 function toggleEdit() {
     popupEdit.classList.toggle('popup_open');
 }
@@ -64,6 +66,20 @@ function openPopUp() {
 
 function makeCard(name = 'Место', link = 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg') {
     const cardElement = cardTemplate.cloneNode(true);
+
+    const removeButton = cardElement.querySelector('.cards__element-remove');
+
+    const likeButton = cardElement.querySelector('.cards__element-button');
+
+    removeButton.addEventListener('click', function() {
+        const listItem = removeButton.closest('.cards__element');
+        listItem.remove();
+    });
+
+    likeButton.addEventListener('click', function (evt) {
+        evt.target.classList.toggle('cards__element-button_active');
+      });
+
     cardElement.querySelector('.cards__element-title').textContent = name;
     cardElement.querySelector('.cards__element-img').src = link;
     cardContainer.prepend(cardElement);

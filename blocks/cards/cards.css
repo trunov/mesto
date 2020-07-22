@@ -6,6 +6,7 @@
 @import url('./__element-button/cards__element-button.css');
 @import url('./__element-img/cards__element-img.css');
 @import url('./__element-remove/cards__element-remove.css');
+@import url('./__element-button/_active/cards__element-button_active.css');
 
 .cards {
     max-width: 882px;
