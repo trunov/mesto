@@ -48,7 +48,10 @@ const title = popupImage.querySelector('.popup__text_type_title');
 const cardTemplate = document.querySelector('#card-template').content;
 const cardContainer = document.querySelector('.cards__container');
 
-
+const popupPhoto = document.querySelector('.popup-photo');
+const popupPhotoImg = popupPhoto.querySelector('.popup__img');
+const popupPhotoTitle = popupPhoto.querySelector('.popup__title-photo');
+const closePhoto = popupPhoto.querySelector('.popup__close-button');
 
 function toggleEdit() {
     popupEdit.classList.toggle('popup_open');
@@ -56,6 +59,10 @@ function toggleEdit() {
 
 function toggleImage() {
     popupImage.classList.toggle('popup_open');
+}
+
+function togglePhoto() {
+    popupPhoto.classList.toggle('popup_open');
 }
 
 function openPopUp() {
@@ -71,6 +78,9 @@ function makeCard(name = 'Место', link = 'https://pictures.s3.yandex.net/fr
 
     const likeButton = cardElement.querySelector('.cards__element-button');
 
+    const cardImage = cardElement.querySelector('.cards__element-img');
+    cardImage.addEventListener('click', openPhoto);
+
     removeButton.addEventListener('click', function() {
         const listItem = removeButton.closest('.cards__element');
         listItem.remove();
@@ -83,6 +93,17 @@ function makeCard(name = 'Место', link = 'https://pictures.s3.yandex.net/fr
     cardElement.querySelector('.cards__element-title').textContent = name;
     cardElement.querySelector('.cards__element-img').src = link;
     cardContainer.prepend(cardElement);
+}
+
+function openPhoto(evt) {
+    const element = evt.target.closest('.cards__element');
+    const img = element.querySelector('.cards__element-img').src;
+    const title = element.querySelector('.cards__element-title').textContent;
+
+    popupPhotoImg.src = img;
+    popupPhotoTitle.textContent = title;
+
+    popupPhoto.classList.toggle('popup_open');
 }
 
 initialCards.forEach(element => {
@@ -111,3 +132,7 @@ popupImgForm.addEventListener('submit', submitImgForm);
 
 addButton.addEventListener('click', toggleImage);
 closeImageButton.addEventListener('click', toggleImage);
+
+closePhoto.addEventListener('click', togglePhoto);
+
+

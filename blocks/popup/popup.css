@@ -5,8 +5,12 @@
 @import url('./__input-container/popup__input-container.css');
 @import url('./__submit-button/popup__submit-button.css');
 @import url('./__container/popup__container.css');
+@import url('./__photo-container/popup__photo-container.css');
+@import url('./__img/popup__img.css');
+@import url('./__title-photo/popup__title-photo.css');
 
 .popup {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
@@ -16,5 +20,7 @@
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.25s, opacity 0.25s linear;
 }
