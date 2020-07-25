@@ -92,8 +92,10 @@ function makeCard(name = 'Место', link = 'https://pictures.s3.yandex.net/fr
 
     cardElement.querySelector('.cards__element-title').textContent = name;
     cardElement.querySelector('.cards__element-img').src = link;
-    cardContainer.prepend(cardElement);
+    cardElement.querySelector('.cards__element-img').alt = name;
+    return cardElement;
 }
+
 
 function openPhoto(evt) {
     const element = evt.target.closest('.cards__element');
@@ -101,13 +103,14 @@ function openPhoto(evt) {
     const title = element.querySelector('.cards__element-title').textContent;
 
     popupPhotoImg.src = img;
+    popupPhotoImg.alt = title;
     popupPhotoTitle.textContent = title;
 
     popupPhoto.classList.toggle('popup_open');
 }
 
 initialCards.forEach(element => {
-    makeCard(element.name, element.link);
+    cardContainer.append(makeCard(element.name, element.link));
 });
 
 function submitEditForm(evt) {
@@ -119,7 +122,7 @@ function submitEditForm(evt) {
 
 function submitImgForm(evt) {
     evt.preventDefault();
-    makeCard(title.value, link.value);
+    cardContainer.prepend(makeCard(title.value, link.value));
     title.value = '';
     link.value = '';
     toggleImage();
