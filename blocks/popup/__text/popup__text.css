@@ -1,3 +1,7 @@
+.popup__text:first-of-type {
+    margin-top: 0px;
+}
+
 .popup__text {
     border: 0;
     width: 100%;
@@ -8,7 +12,7 @@
     font-weight: normal;
     font-size: 14px;
     line-height: 17px;
-    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .popup__text::placeholder {

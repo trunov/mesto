@@ -53,6 +53,8 @@ const popupPhotoImg = popupPhoto.querySelector('.popup__img');
 const popupPhotoTitle = popupPhoto.querySelector('.popup__title-photo');
 const closePhoto = popupPhoto.querySelector('.popup__close-button');
 
+const popups = Array.from(document.querySelectorAll(".popup"));
+
 function toggleEdit() {
     popupEdit.classList.toggle('popup_open');
 }
@@ -128,6 +130,35 @@ function submitImgForm(evt) {
     toggleImage();
 }
 
+function escape(evt) {
+    if (evt.key === "Escape") {
+        const popup = document.getElementsByClassName('popup_open');
+        if (popup.length > 0) {
+            const arr = popup[0].className.split(' ');
+            const determinant = arr[1];
+            switch (determinant) {
+                case 'popup-edit':
+                    toggleEdit();
+                    break;
+                case 'popup-image':
+                    toggleImage();
+                    break;
+                case 'popup-photo':
+                    togglePhoto();
+                    break;
+            }
+        }
+    }
+}
+
+document.addEventListener('keydown', escape);
+
+popups.forEach((item) => item.addEventListener("click", (evt) => {
+    if (evt.target.classList.contains('popup')) {
+        item.classList.remove("popup_open");
+    }
+}));
+
 editButton.addEventListener('click', openPopUp);
 closeButton.addEventListener('click', toggleEdit);
 popupEditForm.addEventListener('submit', submitEditForm);
@@ -137,5 +168,3 @@ addButton.addEventListener('click', toggleImage);
 closeImageButton.addEventListener('click', toggleImage);
 
 closePhoto.addEventListener('click', togglePhoto);
-
-
