@@ -55,23 +55,60 @@ const closePhoto = popupPhoto.querySelector('.popup__close-button');
 
 const popups = Array.from(document.querySelectorAll(".popup"));
 
-function toggleEdit() {
-    popupEdit.classList.toggle('popup_open');
+const closeButtons = popups.map((button) =>
+    button.querySelector(".popup__close-button")
+);
+
+const imageFormElement = popups.find((image) =>
+    image.querySelector(".popup-image__form")
+);
+
+const editFormElement = popups.find((edit) =>
+    edit.querySelector(".popup-edit__form")
+);
+
+function openPopup(popup) {
+    popup.classList.add('popup_open');
+    document.addEventListener('keydown', escape);
 }
 
-function toggleImage() {
-    popupImage.classList.toggle('popup_open');
+function closePopup(popup) {
+    popup.classList.remove("popup_open");
+    document.removeEventListener('keydown', escape);
 }
 
-function togglePhoto() {
-    popupPhoto.classList.toggle('popup_open');
+function escape(evt) {
+    const popupOpen = document.querySelector('.popup_open');
+    if (evt.key === "Escape") {
+        closePopup(popupOpen);
+    }
 }
 
-function openPopUp() {
+closeButtons.forEach((item) => item.addEventListener("click", () => closePopup(item.closest('.popup'))));
+
+function openPopupEdit() {
+    const editSaveButton = editFormElement.querySelector('.popup__submit');
+    editSaveButton.classList.add('popup__submit-button_disabled');
+    editSaveButton.disabled = true;
+
     text.value = profileName.textContent;
     description.value = profileDescription.textContent;
-    toggleEdit();
+
+    openPopup(popupEdit);
 }
+
+function openPopupAdd() {
+
+    const addSaveButton = imageFormElement.querySelector('.popup__submit');
+    addSaveButton.classList.add('popup__submit-button_disabled');
+    addSaveButton.disabled = true;
+
+    title.value = "";
+    link.value = "";
+
+    openPopup(popupImage);
+}
+
 
 function makeCard(name = 'Место', link = 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg') {
     const cardElement = cardTemplate.cloneNode(true);
@@ -83,14 +120,14 @@ function makeCard(name = 'Место', link = 'https://pictures.s3.yandex.net/fr
     const cardImage = cardElement.querySelector('.cards__element-img');
     cardImage.addEventListener('click', openPhoto);
 
-    removeButton.addEventListener('click', function() {
+    removeButton.addEventListener('click', function () {
         const listItem = removeButton.closest('.cards__element');
         listItem.remove();
     });
 
     likeButton.addEventListener('click', function (evt) {
         evt.target.classList.toggle('cards__element-button_active');
-      });
+    });
 
     cardElement.querySelector('.cards__element-title').textContent = name;
     cardElement.querySelector('.cards__element-img').src = link;
@@ -108,7 +145,7 @@ function openPhoto(evt) {
     popupPhotoImg.alt = title;
     popupPhotoTitle.textContent = title;
 
-    popupPhoto.classList.toggle('popup_open');
+    openPopup(popupPhoto);
 }
 
 initialCards.forEach(element => {
@@ -119,7 +156,7 @@ function submitEditForm(evt) {
     evt.preventDefault();
     profileName.textContent = text.value;
     profileDescription.textContent = description.value;
-    toggleEdit();
+    closePopup(popupEdit);
 }
 
 function submitImgForm(evt) {
@@ -127,31 +164,8 @@ function submitImgForm(evt) {
     cardContainer.prepend(makeCard(title.value, link.value));
     title.value = '';
     link.value = '';
-    toggleImage();
+    closePopup(popupImage);
 }
-
-function escape(evt) {
-    if (evt.key === "Escape") {
-        const popup = document.getElementsByClassName('popup_open');
-        if (popup.length > 0) {
-            const arr = popup[0].className.split(' ');
-            const determinant = arr[1];
-            switch (determinant) {
-                case 'popup-edit':
-                    toggleEdit();
-                    break;
-                case 'popup-image':
-                    toggleImage();
-                    break;
-                case 'popup-photo':
-                    togglePhoto();
-                    break;
-            }
-        }
-    }
-}
-
-document.addEventListener('keydown', escape);
 
 popups.forEach((item) => item.addEventListener("click", (evt) => {
     if (evt.target.classList.contains('popup')) {
@@ -159,12 +173,8 @@ popups.forEach((item) => item.addEventListener("click", (evt) => {
     }
 }));
 
-editButton.addEventListener('click', openPopUp);
-closeButton.addEventListener('click', toggleEdit);
+editButton.addEventListener('click', openPopupEdit);
+addButton.addEventListener('click', openPopupAdd);
+
 popupEditForm.addEventListener('submit', submitEditForm);
 popupImgForm.addEventListener('submit', submitImgForm);
-
-addButton.addEventListener('click', toggleImage);
-closeImageButton.addEventListener('click', toggleImage);
-
-closePhoto.addEventListener('click', togglePhoto);
