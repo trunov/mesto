@@ -167,6 +167,7 @@ function submitImgForm (evt) {
 popups.forEach((item) => item.addEventListener('click', (evt) => {
   if (evt.target.classList.contains('popup')) {
     item.classList.remove('popup_open')
+    document.removeEventListener('keydown', escape)
     }
 }))
 
