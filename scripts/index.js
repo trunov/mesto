@@ -128,8 +128,8 @@ function makeCard (name = 'Место', link = 'https://pictures.s3.yandex.net/f
     })
 
     cardElement.querySelector('.cards__element-title').textContent = name
-    cardElement.querySelector('.cards__element-img').src = link
-    cardElement.querySelector('.cards__element-img').alt = name
+    cardImage.src = link
+    cardImage.alt = name
     return cardElement
 }
 
