@@ -1,4 +1,5 @@
 import { openPopup } from './popup.js';
+import { popupPhoto, popupImg, popupTitle } from './index.js';
 
 class Card {
     constructor(data, cardSelector) {
@@ -8,9 +9,13 @@ class Card {
         this._openPopupPhoto = this._openPopupPhoto.bind(this);
     }
     
+    _getTemplate() {
+        const cardTemplate = document.querySelector(this._cardSelector).content.cloneNode(true);;
+        return cardTemplate;
+    }
+
     getView() {
-        const cardTemplate = document.querySelector(this._cardSelector).content;
-        this._view = cardTemplate.cloneNode(true)
+        this._view = this._getTemplate();
         this._view.querySelector('.cards__element-title').textContent = this._name;
         this._setEventListeners();
         const cardImage = this._view.querySelector('.cards__element-img');
@@ -20,10 +25,6 @@ class Card {
     }
 
     _openPopupPhoto() {
-        const popupPhoto = document.querySelector('.popup-photo');
-        const popupImg = popupPhoto.querySelector('.popup__img');
-        const popupTitle = popupPhoto.querySelector('.popup__title-photo');
-
         popupImg.src = this._link;
         popupImg.alt = this._name;
         popupTitle.textContent = this._name;

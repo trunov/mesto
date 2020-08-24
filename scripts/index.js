@@ -41,6 +41,10 @@ const valObj = {
   errorClass: 'popup__error_visible'
 };
 
+const popupPhoto = document.querySelector('.popup-photo');
+const popupImg = popupPhoto.querySelector('.popup__img');
+const popupTitle = popupPhoto.querySelector('.popup__title-photo');
+
 const popupImage = document.querySelector('.popup-image');
 const popupImgForm = popupImage.querySelector('.popup__form');
 const cardContainer = document.querySelector('.cards__container');
@@ -124,8 +128,7 @@ closeButtons.forEach((item) => item.addEventListener('click', () => closePopup(i
 
 popups.forEach((item) => item.addEventListener('click', (evt) => {
   if (evt.target.classList.contains('popup')) {
-    item.classList.remove('popup_open')
-    document.removeEventListener('keydown', escape)
+    closePopup(item);
     }
 }));
 
@@ -154,4 +157,6 @@ editButton.addEventListener('click', openPopupEdit);
 addButton.addEventListener('click', openPopupAdd);
 
 popupEditForm.addEventListener('submit', submitEditForm);
-popupImgForm.addEventListener('submit', submitImgForm)
+popupImgForm.addEventListener('submit', submitImgForm);
+
+export { popupPhoto, popupImg, popupTitle };
