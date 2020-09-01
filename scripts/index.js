@@ -4,7 +4,7 @@ import Section from './Section.js';
 
 import FormValidator from './FormValidator.js';
 
-import { openPopup, closePopup } from './popup.js';
+import { openPopup, closePopup } from './popupp.js';
 
 const initialCards = [
   {
