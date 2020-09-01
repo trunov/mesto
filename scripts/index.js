@@ -1,5 +1,7 @@
 import Card from './Card.js';
 
+import Section from './Section.js';
+
 import FormValidator from './FormValidator.js';
 
 import { openPopup, closePopup } from './popup.js';
@@ -84,9 +86,9 @@ const closeButtons = popups.map((button) =>
   button.querySelector('.popup__close-button')
 )
 
-initialCards.forEach(item => {
-  cardContainer.append(createCard(item));
-})
+// initialCards.forEach(item => {
+//   cardContainer.append(createCard(item));
+// })
 
 const editFormValidator = new FormValidator(valObj, popupEditForm);
 editFormValidator.enableValidation();
@@ -96,8 +98,8 @@ addFormValidator.enableValidation();
 
 function createCard(data) {
   const card = new Card(data, template);
-  const cardElement = card.getView();
-  return cardElement;
+  // const cardElement = card.getView();
+  return card;
 }
 
 function openPopupEdit () {
@@ -152,6 +154,21 @@ function submitImgForm (evt) {
   link.value = '';
   closePopup(popupImage);
 }
+
+// создаём экземпляр класса Section для initialCards
+
+const cardsList = new Section({
+  items: initialCards,
+  renderer: (item) => {
+    const card = createCard(item);
+    const cardElement = card.getView();
+    cardsList.addItem(cardElement, true);
+  },
+},
+cardContainer
+);
+
+cardsList.renderItems();
 
 editButton.addEventListener('click', openPopupEdit);
 addButton.addEventListener('click', openPopupAdd);
