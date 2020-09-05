@@ -1,6 +1,12 @@
 import Card from './Card.js';
 
+import PopupWithImage from './PopupWithImage.js';
+
+import PopupWithForm from './PopupWithForm.js';
+
 import Section from './Section.js';
+
+import UserInfo from './UserInfo.js';
 
 import FormValidator from './FormValidator.js';
 
@@ -90,6 +96,7 @@ const closeButtons = popups.map((button) =>
 //   cardContainer.append(createCard(item));
 // })
 
+const userData = new UserInfo({ nameSelector: profileName, description: profileDescription })
 const editFormValidator = new FormValidator(valObj, popupEditForm);
 editFormValidator.enableValidation();
 
@@ -98,7 +105,6 @@ addFormValidator.enableValidation();
 
 function createCard(data) {
   const card = new Card(data, template);
-  // const cardElement = card.getView();
   return card;
 }
 
@@ -108,8 +114,9 @@ function openPopupEdit () {
   editSaveButton.classList.add('popup__submit-button_disabled')
   editSaveButton.disabled = true
 
-  text.value = profileName.textContent
-  description.value = profileDescription.textContent
+  const profile = userData.getUserInfo();
+  text.value = profile.name;
+  description.value = profile.description;
 
   openPopup(popupEdit)
 }
@@ -134,26 +141,26 @@ popups.forEach((item) => item.addEventListener('click', (evt) => {
     }
 }));
 
-function submitEditForm (evt) {
-  evt.preventDefault();
-  profileName.textContent = text.value;
-  profileDescription.textContent = description.value;
-  closePopup(popupEdit);
-}
+// function submitEditForm (evt) {
+//   evt.preventDefault();
+//   profileName.textContent = text.value;
+//   profileDescription.textContent = description.value;
+//   closePopup(popupEdit);
+// }
 
 function addCard(card) {
   cardContainer.prepend(card);
 }
 
-function submitImgForm (evt) {
-  evt.preventDefault()
-  const data = { name: title.value, link: link.value };
-  addCard(createCard(data));
+// function submitImgForm (evt) {
+//   evt.preventDefault()
+//   const data = { name: title.value, link: link.value };
+//   addCard(createCard(data));
 
-  title.value = '';
-  link.value = '';
-  closePopup(popupImage);
-}
+//   title.value = '';
+//   link.value = '';
+//   closePopup(popupImage);
+// }
 
 // создаём экземпляр класса Section для initialCards
 
@@ -164,16 +171,22 @@ const cardsList = new Section({
     const cardElement = card.getView();
     cardsList.addItem(cardElement, true);
   },
-},
+}, 
 cardContainer
 );
 
 cardsList.renderItems();
 
+const editPopup = new PopupWithForm({
+  popupSelector: popupEdit, 
+  handleFormSubmit: (item) => {
+    userData.setUserInfo(item.name, item.description)
+  }
+})
+
+editPopup.setEventListeners();
+
 editButton.addEventListener('click', openPopupEdit);
 addButton.addEventListener('click', openPopupAdd);
-
-popupEditForm.addEventListener('submit', submitEditForm);
-popupImgForm.addEventListener('submit', submitImgForm);
 
 export { popupPhoto, popupImg, popupTitle };
