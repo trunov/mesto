@@ -18,13 +18,17 @@ class FormValidator {
   }
 
   _setEventListeners() {
-    const inputs = Array.from(this._formEl.querySelectorAll(this._inputSelector));
-    const buttonElement = this._formEl.querySelector(this._submitButtonSelector);
+    const inputs = Array.from(
+      this._formEl.querySelectorAll(this._inputSelector)
+    );
+    const buttonElement = this._formEl.querySelector(
+      this._submitButtonSelector
+    );
 
     this._toggleButtonState(inputs, buttonElement);
 
     inputs.forEach((inputElement) => {
-      inputElement.addEventListener('input', () => {
+      inputElement.addEventListener("input", () => {
         this._checkInputValidity(this._formEl, inputElement);
         this._toggleButtonState(inputs, buttonElement);
       });
@@ -33,20 +37,28 @@ class FormValidator {
 
   _checkInputValidity(formElement, inputElement) {
     if (!inputElement.validity.valid) {
-      this._showInputError(formElement, inputElement, inputElement.validationMessage);
+      this._showInputError(
+        formElement,
+        inputElement,
+        inputElement.validationMessage
+      );
     } else {
       this._hideInputError(formElement, inputElement);
     }
   }
 
   _showInputError(formElement, inputElement, errorMessage) {
-    const errorElement = formElement.querySelector(`#${inputElement.name}-error`);
+    const errorElement = formElement.querySelector(
+      `#${inputElement.name}-error`
+    );
     errorElement.textContent = errorMessage;
   }
 
   _hideInputError(formElement, inputElement) {
-    const errorElement = formElement.querySelector(`#${inputElement.name}-error`);
-    errorElement.textContent = '';
+    const errorElement = formElement.querySelector(
+      `#${inputElement.name}-error`
+    );
+    errorElement.textContent = "";
   }
 
   _toggleButtonState(inputList, buttonElement) {
