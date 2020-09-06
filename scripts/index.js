@@ -87,10 +87,6 @@ const editFormElement = popups.find((edit) =>
   edit.querySelector(".popup-edit__form")
 );
 
-const closeButtons = popups.map((button) =>
-  button.querySelector(".popup__close-button")
-);
-
 const userData = new UserInfo({
   nameSelector: profileName,
   description: profileDescription,
@@ -155,8 +151,15 @@ editPopup.setEventListeners();
 
 const addPopup = new PopupWithForm({
   popupSelector: popupAdd,
-  handleFormSubmit: (item) => {
-    const card = createCard(item);
+  handleFormSubmit: () => {
+    const inputData = addPopup._getInputValues();
+
+    const newPlaceData = {
+      name: inputData.title,
+      link: inputData.link,
+    };
+
+    const card = createCard(newPlaceData);
     const cardElement = card.getView();
     cardsList.addItem(cardElement, false);
   },
