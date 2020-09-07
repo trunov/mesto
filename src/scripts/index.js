@@ -1,14 +1,14 @@
-import Card from "./Card.js";
+import Card from './components/Card.js';
 
-import PopupWithImage from "./PopupWithImage.js";
+import PopupWithImage from "./components/PopupWithImage.js";
 
-import PopupWithForm from "./PopupWithForm.js";
+import PopupWithForm from "./components/PopupWithForm.js";
 
-import Section from "./Section.js";
+import Section from "./components/Section.js";
 
-import UserInfo from "./UserInfo.js";
+import UserInfo from "./components/UserInfo.js";
 
-import FormValidator from "./FormValidator.js";
+import FormValidator from "./components/FormValidator.js";
 
 const initialCards = [
   {
