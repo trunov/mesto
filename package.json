@@ -1,0 +1,25 @@
+{
+  "name": "mesto",
+  "version": "1.0.0",
+  "description": "**Полный лист используемых технологий:**",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist && webpack --mode production",
+    "dev": "webpack-dev-server --open --watch --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trunov/mesto.git"
+  },
+  "author": "Kirill Trunov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trunov/mesto/issues"
+  },
+  "homepage": "https://github.com/trunov/mesto#readme",
+  "devDependencies": {
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
