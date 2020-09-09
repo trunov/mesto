@@ -3,7 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 module.exports = {
-  entry: './src/scripts/index.js',
+  entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'index.js'
@@ -21,6 +21,7 @@ module.exports = {
           }
         }
       },
+      
       {
         test: /\.css$/i,
         use: [
@@ -34,14 +35,33 @@ module.exports = {
           'postcss-loader'
         ]
       },
+     
       {
-        test: /\.(png|jpe?g|gif|woff2|woff|svg)$/i,
+        //для картинок
+        test: /\.(png|jpe?g|gif|svg)$/i,
         use: [
           {
-            loader: 'file-loader'
-          },
+            loader: "file-loader",
+            options: {
+            outputPath: "./images",
+            },
+          }, 
         ],
       },
+
+      {
+        //для шрифтов
+        test: /\.(woff|woff2)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+            outputPath: "./vendor",
+            },
+          }, 
+        ],
+      },
+   
       {
         test: /\.html$/i,
         loader: 'html-loader'

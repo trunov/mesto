@@ -1,16 +1,16 @@
-import '../pages/index.css';
+import "./pages/index.css";
 
-import Card from './components/Card.js';
+import Card from "./scripts/components/Card.js";
 
-import PopupWithImage from "./components/PopupWithImage.js";
+import PopupWithImage from "./scripts/components/PopupWithImage.js";
 
-import PopupWithForm from "./components/PopupWithForm.js";
+import PopupWithForm from "./scripts/components/PopupWithForm.js";
 
-import Section from "./components/Section.js";
+import Section from "./scripts/components/Section.js";
 
-import UserInfo from "./components/UserInfo.js";
+import UserInfo from "./scripts/components/UserInfo.js";
 
-import FormValidator from "./components/FormValidator.js";
+import FormValidator from "./scripts/components/FormValidator.js";
 
 const initialCards = [
   {
@@ -106,10 +106,14 @@ function createCard(data) {
   return card;
 }
 
+function buttonEdit(element) {
+  const saveButton = element.querySelector(".popup__submit");
+  saveButton.classList.add("popup__submit-button_disabled");
+  saveButton.disabled = true;
+}
+
 function openPopupEdit() {
-  const editSaveButton = editFormElement.querySelector(".popup__submit");
-  editSaveButton.classList.add("popup__submit-button_disabled");
-  editSaveButton.disabled = true;
+  buttonEdit(editFormElement);
 
   const profile = userData.getUserInfo();
   text.value = profile.name;
@@ -119,9 +123,7 @@ function openPopupEdit() {
 }
 
 function openPopupAdd() {
-  const addSaveButton = imageFormElement.querySelector(".popup__submit");
-  addSaveButton.classList.add("popup__submit-button_disabled");
-  addSaveButton.disabled = true;
+  buttonEdit(imageFormElement);
 
   addPopup.open();
 }
@@ -169,11 +171,9 @@ const addPopup = new PopupWithForm({
 
 addPopup.setEventListeners();
 
-const imgPopup = new PopupWithImage(popupPhoto);
+const imgPopup = new PopupWithImage(popupPhoto, popupImg, popupTitle);
 
 imgPopup.setEventListeners();
 
 editButton.addEventListener("click", openPopupEdit);
 addButton.addEventListener("click", openPopupAdd);
-
-export { popupPhoto, popupImg, popupTitle };
