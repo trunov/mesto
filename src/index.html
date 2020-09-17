@@ -76,13 +76,40 @@
       </div>
     </div>
 
+    <div class="popup popup-confirm">
+      <div class="popup__container">
+        <button aria-label="Закрыть подтверждение удаления карточки" type="button" class="popup__close-button"></button>
+        <h2 class="popup__title popup__title_confirm">Вы уверены?</h2>
+        <div class="popup__confirm-wrap">
+          <button type="submit" class="popup__submit-button">Да</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup popup-avatar">
+      <div class="popup__container">
+        <button aria-label="Закрыть редактирование аватарки" type="button" class="popup__close-button"></button>
+        <h2 class="popup__title">Обновить аватар</h2>
+        <form action="#" name="popup-form" class="popup__form popup-avatar__form" novalidate>
+          <fieldset class="popup__input-container">
+            <input required name="link" type="url" placeholder="Ссылка на картинку" class="popup__text popup__text_type_link" id="link-input" />
+            <!-- <span id='link-input-error'></span> -->
+            <button type="submit" class="popup__submit-button">Сохранить</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+
     <template id="card-template">
       <li class="cards__element">
         <img class="cards__element-img" src="#" alt="" />
         <button class="cards__element-remove" type="button" title="Удалить"></button>
         <div class="cards__description">
           <h2 class="cards__element-title"></h2>
-          <button class="cards__element-button" type="button" title="Нравится"></button>
+          <div class="cards__element-wrap">
+            <button class="cards__element-button" type="button" title="Нравится"></button>
+            <p class="cards__element-like">0</p>
+          </div>
         </div>
       </li>
     </template>

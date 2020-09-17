@@ -4,6 +4,10 @@ class Card {
     this._link = data.link;
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
+
+    this._likes = data.likes;
+    this._owner = data.owner;
+    // this._currentUserId = currentUserId;
   }
 
   _getTemplate() {
@@ -20,7 +24,10 @@ class Card {
     const cardImage = this._view.querySelector(".cards__element-img");
     cardImage.src = this._link;
     cardImage.alt = this._name;
+
+    this._view.querySelector(".cards__element-like").textContent = this._likes.length;
     return this._view;
+    
   }
 
   _setEventListeners() {

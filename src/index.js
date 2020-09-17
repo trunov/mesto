@@ -2,6 +2,8 @@ import "./pages/index.css";
 
 import Card from "./scripts/components/Card.js";
 
+import Api from "./scripts/components/Api.js";
+
 import PopupWithImage from "./scripts/components/PopupWithImage.js";
 
 import PopupWithForm from "./scripts/components/PopupWithForm.js";
@@ -11,39 +13,6 @@ import Section from "./scripts/components/Section.js";
 import UserInfo from "./scripts/components/UserInfo.js";
 
 import FormValidator from "./scripts/components/FormValidator.js";
-
-const initialCards = [
-  {
-    name: "Архыз",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
-  },
-  {
-    name: "Челябинская область",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
-  },
-  {
-    name: "Иваново",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
-  },
-  {
-    name: "Камчатка",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
-  },
-  {
-    name: "Холмогорский район",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
-  },
-  {
-    name: "Байкал",
-    link:
-      "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
-  },
-];
 
 const valObj = {
   formSelector: ".popup__form",
@@ -78,6 +47,7 @@ const template = "#card-template";
 
 const popupAdd = document.querySelector(".popup-image");
 const popupAddForm = popupAdd.querySelector(".popup__form");
+const popupAddButton = popupAdd.querySelector('.popup__submit');
 
 const popups = Array.from(document.querySelectorAll(".popup"));
 
@@ -106,6 +76,23 @@ function createCard(data) {
   return card;
 }
 
+// экземпляра класса Api
+const api = new Api({
+  url: "https://mesto.nomoreparties.co/v1/cohort-15",
+  headers: {
+    authorization: "ae4fa4cf-0e81-45c0-b4da-16ce9ece8f68",
+    "Content-type": "application/json",
+  },
+});
+
+const task = api.getInitialCards();
+
+task
+  .then((data) => {
+    setupCards(data);
+  })
+  .catch((err) => alert(err));
+
 function buttonEdit(element) {
   const saveButton = element.querySelector(".popup__submit");
   saveButton.classList.add("popup__submit-button_disabled");
@@ -128,21 +115,27 @@ function openPopupAdd() {
   addPopup.open();
 }
 
-// создаём экземпляр класса Section для initialCards
-
-const cardsList = new Section(
-  {
-    items: initialCards,
-    renderer: (item) => {
-      const card = createCard(item);
-      const cardElement = card.getView();
-      cardsList.addItem(cardElement, true);
+function setupCards(cards) {
+  const cardsList = new Section(
+    {
+      items: cards,
+      renderer: (item) => {
+        const card = createCard(item);
+        const cardElement = card.getView();
+        cardsList.addItem(cardElement, true);
+      },
     },
-  },
-  cardContainer
-);
+    cardContainer
+  );
 
-cardsList.renderItems();
+  cardsList.renderItems();
+}
+
+const userCard = new Section({
+  data: [],
+},
+cardContainer
+);
 
 const editPopup = new PopupWithForm({
   popupSelector: popupEdit,
@@ -162,10 +155,16 @@ const addPopup = new PopupWithForm({
       name: inputData.title,
       link: inputData.link,
     };
-
-    const card = createCard(newPlaceData);
-    const cardElement = card.getView();
-    cardsList.addItem(cardElement, false);
+    popupAddButton.textContent = 'Сохранение...';
+    api.addNewCard(newPlaceData).
+      then((result) => {
+        const card = createCard(result);
+        const cardElement = card.getView();
+        userCard.addItem(cardElement, false);
+        popupAddButton.textContent = 'Создать';
+      })
+      .catch(err => console.log(`Error ${err}`));
+    
   },
 });
 
