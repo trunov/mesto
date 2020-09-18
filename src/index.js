@@ -41,6 +41,7 @@ const addButton = profile.querySelector(".profile__add-button");
 
 const popupEdit = document.querySelector(".popup-edit");
 const popupEditForm = popupEdit.querySelector(".popup__form");
+const popupEditButton = popupEdit.querySelector(".popup__submit");
 
 const text = popupEdit.querySelector(".popup__text_type_name");
 const description = popupEdit.querySelector(".popup__text_type_description");
@@ -74,16 +75,69 @@ editFormValidator.enableValidation();
 const addFormValidator = new FormValidator(valObj, popupAddForm);
 addFormValidator.enableValidation();
 
+// экземпляра класса Api
+const api = new Api({
+  url: "https://mesto.nomoreparties.co/v1/cohort-15",
+  headers: {
+    authorization: "ae4fa4cf-0e81-45c0-b4da-16ce9ece8f68",
+    "Content-type": "application/json",
+  },
+});
+
+const user = api.getUserInfo();
+
+let currentUser;
+
+user
+  .then((user) => {
+    setupUser(user);
+  })
+  .catch((err) => alert(err));
+
+function setupUser(user) {
+  profileName.textContent = user.name;
+  profileDescription.textContent = user.about;
+  currentUser = user._id;
+}
+
 function createCard(data) {
   const card = new Card(
     data,
     template,
+    currentUser,
     () => {
       imgPopup.open(data.link, data.name);
     },
     () => {
       card._id = data._id;
       popupConfirm.open(card);
+    },
+
+    // api.addLike(data._id)
+    (evt) => {
+      evt.target.classList.toggle("cards__element-button_active");
+      const elementLike = evt.target
+        .closest(".cards__element-wrap")
+        .querySelector(".cards__element-like");
+
+      if (evt.target.classList.contains("cards__element-button_active")) {
+        api
+          .addLike(data._id)
+          .then(() => {
+            console.log(data);
+            elementLike.textContent = data.likes.length + 1;
+          })
+
+          .catch((err) => console.log(`Error ${err}`));
+      } else {
+        api
+          .deleteLike(data._id)
+          .then(() => {
+            elementLike.textContent = data.likes.length;
+          })
+
+          .catch((err) => console.log(`Error ${err}`));
+      }
     }
   );
   return card;
@@ -104,15 +158,6 @@ const popupConfirm = new PopupConfirm({
   },
 });
 popupConfirm.setEventListeners();
-
-// экземпляра класса Api
-const api = new Api({
-  url: "https://mesto.nomoreparties.co/v1/cohort-15",
-  headers: {
-    authorization: "ae4fa4cf-0e81-45c0-b4da-16ce9ece8f68",
-    "Content-type": "application/json",
-  },
-});
 
 const task = api.getInitialCards();
 
@@ -167,10 +212,19 @@ const userCard = new Section(
   cardContainer
 );
 
+//! WORK AREA
 const editPopup = new PopupWithForm({
   popupSelector: popupEdit,
   handleFormSubmit: (item) => {
-    userData.setUserInfo(item.name, item.description);
+    popupEditButton.textContent = "Сохранение...";
+    api
+      .editProfile(item)
+      .then((result) => {
+        userData.setUserInfo(result.name, result.about);
+        popupEditButton.textContent = "Сохранить";
+        editPopup.close();
+      })
+      .catch((err) => console.log(`Error ${err}`));
   },
 });
 

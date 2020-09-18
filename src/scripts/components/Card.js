@@ -1,14 +1,15 @@
 class Card {
-  constructor(data, cardSelector, handleCardClick, handleDeleteClick) {
+  constructor(data, cardSelector, currentUserId, handleCardClick, handleDeleteClick, handleLikeClick) {
     this._name = data.name;
     this._link = data.link;
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
     this._handleDeleteClick = handleDeleteClick;
+    this._handleLikeClick = handleLikeClick;
 
     this._likes = data.likes;
     this._owner = data.owner;
-    // this._currentUserId = currentUserId;
+    this._currentUserId = currentUserId;
   }
 
   _getTemplate() {
@@ -26,6 +27,12 @@ class Card {
     cardImage.src = this._link;
     cardImage.alt = this._name;
 
+    this._likes.forEach((item) => {
+      if (item._id == this._currentUserId) {
+        this._view.querySelector('.cards__element-button').classList.add('cards__element-button_active');
+      }
+    });
+
     this._cardItem = this._view.querySelector(".cards__element");
 
     this._view.querySelector(
@@ -39,15 +46,33 @@ class Card {
     this._cardItem.remove();
   }
 
+  renderLike(likes) {
+    this._view.querySelector(
+      ".cards__element-like"
+    ).textContent = likes;
+  }
+
+  setLike(data) {
+    this.isLike();
+    this.renderLike(data.likes.length);
+    
+  }
+
+  isLike() {
+    this._view
+      .querySelector(".cards__element-button")
+      .addEventListener("click", function (evt) {
+        evt.target.classList.toggle("cards__element-button_active");
+      });
+  }
+
   _setEventListeners() {
     this._view
       .querySelector(".cards__element-remove")
       .addEventListener("click", this._handleDeleteClick);
     this._view
       .querySelector(".cards__element-button")
-      .addEventListener("click", function (evt) {
-        evt.target.classList.toggle("cards__element-button_active");
-      });
+      .addEventListener("click", this._handleLikeClick);
 
     this._view
       .querySelector(".cards__element-img")
