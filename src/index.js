@@ -4,6 +4,8 @@ import Card from "./scripts/components/Card.js";
 
 import Api from "./scripts/components/Api.js";
 
+import PopupConfirm from "./scripts/components/PopupConfirm.js";
+
 import PopupWithImage from "./scripts/components/PopupWithImage.js";
 
 import PopupWithForm from "./scripts/components/PopupWithForm.js";
@@ -47,9 +49,12 @@ const template = "#card-template";
 
 const popupAdd = document.querySelector(".popup-image");
 const popupAddForm = popupAdd.querySelector(".popup__form");
-const popupAddButton = popupAdd.querySelector('.popup__submit');
+const popupAddButton = popupAdd.querySelector(".popup__submit");
 
 const popups = Array.from(document.querySelectorAll(".popup"));
+
+const popupCon = document.querySelector(".popup-confirm");
+const deleteButton = popupCon.querySelector(".popup__submit-button");
 
 const imageFormElement = popups.find((image) =>
   image.querySelector(".popup-image__form")
@@ -70,11 +75,35 @@ const addFormValidator = new FormValidator(valObj, popupAddForm);
 addFormValidator.enableValidation();
 
 function createCard(data) {
-  const card = new Card(data, template, () => {
-    imgPopup.open(data.link, data.name);
-  });
+  const card = new Card(
+    data,
+    template,
+    () => {
+      imgPopup.open(data.link, data.name);
+    },
+    () => {
+      card._id = data._id;
+      popupConfirm.open(card);
+    }
+  );
   return card;
 }
+
+const popupConfirm = new PopupConfirm({
+  popupSelector: popupCon,
+  handleSubmit: (item) => {
+    deleteButton.textContent = "Удаление...";
+    api
+      .deleteCard(item._id)
+      .then(() => {
+        item.removeCardElement();
+        popupConfirm.close();
+        deleteButton.textContent = "Да";
+      })
+      .catch((err) => console.log(`Error ${err}`));
+  },
+});
+popupConfirm.setEventListeners();
 
 // экземпляра класса Api
 const api = new Api({
@@ -131,10 +160,11 @@ function setupCards(cards) {
   cardsList.renderItems();
 }
 
-const userCard = new Section({
-  data: [],
-},
-cardContainer
+const userCard = new Section(
+  {
+    data: [],
+  },
+  cardContainer
 );
 
 const editPopup = new PopupWithForm({
@@ -155,23 +185,22 @@ const addPopup = new PopupWithForm({
       name: inputData.title,
       link: inputData.link,
     };
-    popupAddButton.textContent = 'Сохранение...';
-    api.addNewCard(newPlaceData).
-      then((result) => {
+    popupAddButton.textContent = "Сохранение...";
+    api
+      .addNewCard(newPlaceData)
+      .then((result) => {
         const card = createCard(result);
         const cardElement = card.getView();
         userCard.addItem(cardElement, false);
-        popupAddButton.textContent = 'Создать';
+        popupAddButton.textContent = "Создать";
       })
-      .catch(err => console.log(`Error ${err}`));
-    
+      .catch((err) => console.log(`Error ${err}`));
   },
 });
 
 addPopup.setEventListeners();
 
 const imgPopup = new PopupWithImage(popupPhoto, popupImg, popupTitle);
-
 imgPopup.setEventListeners();
 
 editButton.addEventListener("click", openPopupEdit);
