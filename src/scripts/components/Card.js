@@ -46,26 +46,6 @@ class Card {
     this._cardItem.remove();
   }
 
-  renderLike(likes) {
-    this._view.querySelector(
-      ".cards__element-like"
-    ).textContent = likes;
-  }
-
-  setLike(data) {
-    this.isLike();
-    this.renderLike(data.likes.length);
-    
-  }
-
-  isLike() {
-    this._view
-      .querySelector(".cards__element-button")
-      .addEventListener("click", function (evt) {
-        evt.target.classList.toggle("cards__element-button_active");
-      });
-  }
-
   _setEventListeners() {
     this._view
       .querySelector(".cards__element-remove")

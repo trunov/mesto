@@ -122,7 +122,25 @@ class Api {
       return Promise.reject(`Ошибка: ${res.status}`);
     });
   }
-  // другие методы работы с API
+
+  editAvatar({ link }) {
+    return fetch(`${this._url}/users/me/avatar`, {
+      method: "PATCH",
+      headers: {
+        authorization: this._authorization,
+        "Content-Type": this._contentType,
+      },
+      body: JSON.stringify({
+        avatar: `${link}`,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+
+      return Promise.reject(`Ошибка: ${res.status}`);
+    });
+  }
 }
 
 export default Api;
