@@ -5,7 +5,8 @@ class Card {
     currentUserId,
     handleCardClick,
     handleDeleteClick,
-    handleLikeClick
+    handleLikeClick,
+    handleDislikeCard
   ) {
     this._name = data.name;
     this._link = data.link;
@@ -13,10 +14,12 @@ class Card {
     this._handleCardClick = handleCardClick;
     this._handleDeleteClick = handleDeleteClick;
     this._handleLikeClick = handleLikeClick;
+    this._handleDislikeCard = handleDislikeCard;
 
     this._likes = data.likes;
     this._currentUserId = currentUserId;
     this._owner = data.owner;
+    this._isLiked = data.likes.some((user) => user._id === currentUserId);
   }
 
   _getTemplate() {
@@ -35,8 +38,8 @@ class Card {
     cardImage.alt = this._name;
 
     if (this._owner._id !== this._currentUserId) {
-      this._view.querySelector('.cards__element-remove').remove();
-    };
+      this._view.querySelector(".cards__element-remove").remove();
+    }
 
     this._likes.forEach((item) => {
       if (item._id == this._currentUserId) {
@@ -46,7 +49,9 @@ class Card {
       }
     });
 
+    this._cardButton = this._view.querySelector(".cards__element-button");
     this._cardItem = this._view.querySelector(".cards__element");
+    this._counter = this._view.querySelector(".cards__element-like");
 
     this._view.querySelector(
       ".cards__element-like"
@@ -59,10 +64,30 @@ class Card {
     this._cardItem.remove();
   }
 
-  setLikes(evt, likes) {
-    evt.target
-      .closest(".cards__element-wrap")
-      .querySelector(".cards__element-like").textContent = likes;
+  setLikes(likes) {
+    this._counter.textContent = likes;
+  }
+
+  _renderLikeBtn(isLiked) {
+    if (isLiked) {
+      this._cardButton.classList.add("cards__element-button_active");
+    } else {
+      this._cardButton.classList.remove("cards__element-button_active");
+    }
+  }
+
+  processLikes(data) {
+    this._isLiked = !this._isLiked;
+    this.setLikes(data.likes.length);
+    this._renderLikeBtn(this._isLiked);
+  }
+
+  _handleLike() {
+    if (!this._isLiked) {
+      this._handleLikeClick();
+    } else {
+      this._handleDislikeCard();
+    }
   }
 
   _setEventListeners() {
@@ -71,7 +96,7 @@ class Card {
       .addEventListener("click", this._handleDeleteClick);
     this._view
       .querySelector(".cards__element-button")
-      .addEventListener("click", this._handleLikeClick);
+      .addEventListener("click", this._handleLike.bind(this));
 
     this._view
       .querySelector(".cards__element-img")

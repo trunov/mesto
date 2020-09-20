@@ -137,30 +137,24 @@ function createCard(data) {
       card._id = data._id;
       popupConfirm.open(card);
     },
+    () => {
+      api
+        .addLike(data._id)
+        .then((res) => {
+          card.processLikes(res);
+        })
+        .catch((err) => console.log(`Error ${err}`));
+    },
 
-    (evt) => {
-      evt.target.classList.toggle("cards__element-button_active");
+    () => {
+      api
+        .deleteLike(data._id)
+        .then((res) => {
+          card.processLikes(res);
+        })
 
-      if (evt.target.classList.contains("cards__element-button_active")) {
-        api
-          .addLike(data._id)
-          .then((res) => {
-            card.setLikes(evt, res.likes.length);
-          })
-
-          .catch((err) => console.log(`Error ${err}`));
-      } else {
-        api
-          .deleteLike(data._id)
-          .then((res) => {
-            card.setLikes(evt, res.likes.length);
-          })
-
-          .catch((err) => console.log(`Error ${err}`));
-      }
+        .catch((err) => console.log(`Error ${err}`));
     }
-
-    // api.addLike(data._id)
   );
 
   return card;
