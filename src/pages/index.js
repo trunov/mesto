@@ -1,20 +1,20 @@
-import "./pages/index.css";
+import "./index.css";
 
-import Card from "./scripts/components/Card.js";
+import Card from "./../scripts/components/Card.js";
 
-import Api from "./scripts/components/Api.js";
+import Api from "./../scripts/components/Api.js";
 
-import PopupConfirm from "./scripts/components/PopupConfirm.js";
+import PopupConfirm from "./../scripts/components/PopupConfirm.js";
 
-import PopupWithImage from "./scripts/components/PopupWithImage.js";
+import PopupWithImage from "./../scripts/components/PopupWithImage.js";
 
-import PopupWithForm from "./scripts/components/PopupWithForm.js";
+import PopupWithForm from "./../scripts/components/PopupWithForm.js";
 
-import Section from "./scripts/components/Section.js";
+import Section from "./../scripts/components/Section.js";
 
-import UserInfo from "./scripts/components/UserInfo.js";
+import UserInfo from "./../scripts/components/UserInfo.js";
 
-import FormValidator from "./scripts/components/FormValidator.js";
+import FormValidator from "./../scripts/components/FormValidator.js";
 
 const valObj = {
   formSelector: ".popup__form",
@@ -90,6 +90,14 @@ addFormValidator.enableValidation();
 const AvaFormValidator = new FormValidator(valObj, popupAvatarForm);
 AvaFormValidator.enableValidation();
 
+function renderLoading(check) {
+  if (check) {
+    return "Сохранение...";
+  } else {
+    return "Сохранить";
+  }
+}
+
 // экземпляра класса Api
 const api = new Api({
   url: "https://mesto.nomoreparties.co/v1/cohort-15",
@@ -99,21 +107,22 @@ const api = new Api({
   },
 });
 
-const user = api.getUserInfo();
+Promise.all([api.getUserInfo(), api.getInitialCards()])
+  .then((values) => {
+    //попадаем сюда когда оба промиса будут выполнены
+    setUser(values[0]);
+    setupCards(values[1]);
+  })
+  .catch((err) => {
+    //попадаем сюда если один из промисов завершаться ошибкой
+    console.log(err);
+  });
 
 let currentUser;
 
-user
-  .then((user) => {
-    setupUser(user);
-  })
-  .catch((err) => alert(err));
-
-function setupUser(user) {
-  profileName.textContent = user.name;
-  profileDescription.textContent = user.about;
+function setUser(user) {
+  userData.setUserInfo(user.name, user.about, user.avatar);
   currentUser = user._id;
-  avatar.style.backgroundImage = `url(${user.avatar})`;
 }
 
 function createCard(data) {
@@ -129,19 +138,14 @@ function createCard(data) {
       popupConfirm.open(card);
     },
 
-    // api.addLike(data._id)
     (evt) => {
       evt.target.classList.toggle("cards__element-button_active");
-      const elementLike = evt.target
-        .closest(".cards__element-wrap")
-        .querySelector(".cards__element-like");
 
       if (evt.target.classList.contains("cards__element-button_active")) {
         api
           .addLike(data._id)
           .then((res) => {
-            console.log(res);
-            elementLike.textContent = res.likes.length;
+            card.setLikes(evt, res.likes.length);
           })
 
           .catch((err) => console.log(`Error ${err}`));
@@ -149,13 +153,16 @@ function createCard(data) {
         api
           .deleteLike(data._id)
           .then((res) => {
-            elementLike.textContent = res.likes.length;
+            card.setLikes(evt, res.likes.length);
           })
 
           .catch((err) => console.log(`Error ${err}`));
       }
     }
+
+    // api.addLike(data._id)
   );
+
   return card;
 }
 
@@ -163,14 +170,14 @@ const avatarPopup = new PopupWithForm({
   popupSelector: popupAv,
   handleFormSubmit: (item) => {
     const avatarSaveButton = popupAv.querySelector(".popup__submit-button");
-    avatarSaveButton.textContent = "Сохранение...";
+    avatarSaveButton.textContent = renderLoading(true);
     api
       .editAvatar(item)
       .then((res) => {
         console.log(res);
         userData.setUserInfo(res.name, res.about, res.avatar);
-        avatarSaveButton.textContent = "Сохранить";
-        popupAv.close();
+        avatarSaveButton.textContent = renderLoading(false);
+        avatarPopup.close();
       })
       .catch((err) => console.log(`Error ${err}`));
   },
@@ -193,14 +200,6 @@ const popupConfirm = new PopupConfirm({
   },
 });
 popupConfirm.setEventListeners();
-
-const task = api.getInitialCards();
-
-task
-  .then((data) => {
-    setupCards(data);
-  })
-  .catch((err) => alert(err));
 
 function buttonEdit(element) {
   const saveButton = element.querySelector(".popup__submit");
@@ -256,12 +255,12 @@ const userCard = new Section(
 const editPopup = new PopupWithForm({
   popupSelector: popupEdit,
   handleFormSubmit: (item) => {
-    popupEditButton.textContent = "Сохранение...";
+    popupEditButton.textContent = renderLoading(true);
     api
       .editProfile(item)
       .then((result) => {
         userData.setUserInfo(result.name, result.about, result.avatar);
-        popupEditButton.textContent = "Сохранить";
+        popupEditButton.textContent = renderLoading(false);
         editPopup.close();
       })
       .catch((err) => console.log(`Error ${err}`));
@@ -272,21 +271,20 @@ editPopup.setEventListeners();
 
 const addPopup = new PopupWithForm({
   popupSelector: popupAdd,
-  handleFormSubmit: () => {
-    const inputData = addPopup._getInputValues();
-
+  handleFormSubmit: (item) => {
     const newPlaceData = {
-      name: inputData.title,
-      link: inputData.link,
+      name: item.title,
+      link: item.link,
     };
-    popupAddButton.textContent = "Сохранение...";
+    popupAddButton.textContent = renderLoading(true);
     api
       .addNewCard(newPlaceData)
       .then((result) => {
         const card = createCard(result);
         const cardElement = card.getView();
         userCard.addItem(cardElement, false);
-        popupAddButton.textContent = "Создать";
+        popupAddButton.textContent = renderLoading(false);
+        addPopup.close();
       })
       .catch((err) => console.log(`Error ${err}`));
   },

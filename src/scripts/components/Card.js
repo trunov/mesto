@@ -1,5 +1,12 @@
 class Card {
-  constructor(data, cardSelector, currentUserId, handleCardClick, handleDeleteClick, handleLikeClick) {
+  constructor(
+    data,
+    cardSelector,
+    currentUserId,
+    handleCardClick,
+    handleDeleteClick,
+    handleLikeClick
+  ) {
     this._name = data.name;
     this._link = data.link;
     this._cardSelector = cardSelector;
@@ -8,8 +15,8 @@ class Card {
     this._handleLikeClick = handleLikeClick;
 
     this._likes = data.likes;
-    this._owner = data.owner;
     this._currentUserId = currentUserId;
+    this._owner = data.owner;
   }
 
   _getTemplate() {
@@ -27,9 +34,15 @@ class Card {
     cardImage.src = this._link;
     cardImage.alt = this._name;
 
+    if (this._owner._id !== this._currentUserId) {
+      this._view.querySelector('.cards__element-remove').remove();
+    };
+
     this._likes.forEach((item) => {
       if (item._id == this._currentUserId) {
-        this._view.querySelector('.cards__element-button').classList.add('cards__element-button_active');
+        this._view
+          .querySelector(".cards__element-button")
+          .classList.add("cards__element-button_active");
       }
     });
 
@@ -44,6 +57,12 @@ class Card {
 
   removeCardElement() {
     this._cardItem.remove();
+  }
+
+  setLikes(evt, likes) {
+    evt.target
+      .closest(".cards__element-wrap")
+      .querySelector(".cards__element-like").textContent = likes;
   }
 
   _setEventListeners() {
